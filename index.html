@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>피동 표현과 인용 표현 | 중2 국어</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --primary: #2d5a3d;
+    --primary-light: #4a8c60;
+    --accent: #e8a020;
+    --accent2: #c94040;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --border: #e0ddd6;
+    --card-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+
+  /* ── 교사 설정 안내 배너 ── */
+  .setup-banner {
+    background: #fff8e1;
+    border-bottom: 2px solid var(--accent);
+    padding: 0.7rem 1.5rem;
+    font-size: 0.82rem;
+    color: #6b4000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .setup-banner strong { color: #a06000; }
+  .setup-banner .setup-link {
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.82rem;
+  }
+
+  /* ── 교사 설정 모달 ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal h3 { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--primary); }
+  .modal .modal-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.4rem; line-height: 1.6; }
+  .modal label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; margin-top: 1rem; }
+  .modal label:first-of-type { margin-top: 0; }
+  .modal input[type="text"], .modal input[type="url"] {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .modal input:focus { border-color: var(--primary); }
+  .modal .help-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
+  .modal .modal-actions { display: flex; gap: 0.6rem; margin-top: 1.5rem; }
+
+  /* ── 학생 정보 입력 모달 ── */
+  .student-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .student-modal.show { display: flex; }
+  .student-box {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    animation: slideUp 0.25s ease;
+  }
+  .student-box h3 { font-family: 'Noto Serif KR', serif; font-size: 1.15rem; margin-bottom: 0.4rem; color: var(--primary); }
+  .student-box p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.4rem; }
+  .student-box .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .student-field { margin-bottom: 1rem; }
+  .student-field label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .student-field input, .student-field select {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+    background: #fff;
+  }
+  .student-field input:focus, .student-field select:focus { border-color: var(--primary); }
+  .student-info-bar {
+    background: linear-gradient(135deg, #f0f7f3, #e8f4ed);
+    border: 1.5px solid #b8d9c4;
+    border-radius: 10px;
+    padding: 0.7rem 1.1rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.88rem;
+    display: none;
+  }
+  .student-info-bar.show { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+  .student-info-bar .info-chip {
+    background: var(--primary);
+    color: #fff;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    color: #fff;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  nav .logo { font-family: 'Noto Serif KR', serif; font-size: 1.05rem; font-weight: 700; }
+  nav .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+  nav .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.82rem; padding: 0.4rem 0.75rem; border-radius: 6px; transition: background 0.2s; font-weight: 500; cursor: pointer; }
+  nav .nav-links a:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #1a3d28 100%);
+    color: #fff; padding: 3.5rem 2rem 2.5rem; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.78rem; letter-spacing: 0.05em; margin-bottom: 1.2rem; }
+  .hero h1 { font-family: 'Noto Serif KR', serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; margin-bottom: 0.8rem; line-height: 1.3; }
+  .hero p { font-size: 0.95rem; opacity: 0.85; max-width: 500px; margin: 0 auto 2rem; }
+  .hero-goals { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; max-width: 620px; margin: 0 auto; }
+  .hero-goals .goal { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.83rem; text-align: left; }
+  .hero-goals .goal strong { display: block; font-size: 0.75rem; opacity: 0.7; margin-bottom: 0.2rem; }
+
+  /* ── TIMER ── */
+  .timer-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 2rem;
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    position: sticky;
+    top: 56px;
+    z-index: 90;
+  }
+  .timer-bar.show { display: flex; }
+  .timer-val { font-weight: 700; color: var(--primary); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+
+  /* ── MAIN ── */
+  main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; background: var(--surface); padding: 0.4rem; border-radius: 12px; box-shadow: var(--card-shadow); flex-wrap: wrap; }
+  .tab-btn { flex: 1; min-width: 110px; padding: 0.65rem 0.8rem; border: none; background: transparent; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; color: var(--text-muted); transition: all 0.2s; }
+  .tab-btn.active { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(45,90,61,0.3); }
+  .tab-btn:hover:not(.active) { background: var(--border); color: var(--text); }
+  .tab-btn .tab-check { font-size: 0.7rem; color: #2d8a50; margin-left: 0.3rem; display: none; }
+  .tab-btn.done .tab-check { display: inline; }
+
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── CARDS ── */
+  .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--card-shadow); padding: 1.8rem; margin-bottom: 1.5rem; }
+  .card-title { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 1.2rem; padding-bottom: 0.7rem; border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+  .card-title .icon { width: 28px; height: 28px; background: var(--primary); color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+
+  /* ── CONCEPT ── */
+  .concept-box { background: linear-gradient(135deg, #f0f7f3 0%, #e8f4ed 100%); border: 1.5px solid #b8d9c4; border-radius: 10px; padding: 1.1rem 1.3rem; margin-bottom: 1.2rem; }
+  .concept-box .label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; color: var(--primary); text-transform: uppercase; margin-bottom: 0.4rem; }
+  .concept-box p { font-size: 0.93rem; }
+  .key-term { background: var(--accent); color: #fff; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700; font-size: 0.9em; }
+
+  /* ── TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0; }
+  .compare-table th { background: var(--primary); color: #fff; padding: 0.65rem 0.9rem; text-align: center; font-weight: 600; font-size: 0.82rem; }
+  .compare-table th:first-child { border-radius: 8px 0 0 0; } .compare-table th:last-child { border-radius: 0 8px 0 0; }
+  .compare-table td { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: #f9f8f5; }
+  .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700; }
+  .tag-active { background: #ddf0e8; color: var(--primary); }
+  .tag-passive { background: #fff0d4; color: #a06010; }
+
+  /* ── METHOD GRID ── */
+  .method-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .method-grid { grid-template-columns: repeat(2, 1fr); } }
+  .method-card { background: #f9f8f5; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.9rem; text-align: center; }
+  .method-card .suffix { font-size: 1.3rem; font-weight: 900; color: var(--primary); font-family: 'Noto Serif KR', serif; display: block; margin-bottom: 0.3rem; }
+  .method-card .examples { font-size: 0.76rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── EFFECT LIST ── */
+  .effect-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .effect-item { display: flex; gap: 0.9rem; align-items: flex-start; padding: 0.85rem 1rem; border-radius: 10px; background: #f9f8f5; border-left: 4px solid var(--primary); }
+  .effect-item .num { width: 24px; height: 24px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .effect-item .title { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.2rem; }
+  .effect-item .example { font-size: 0.82rem; color: var(--text-muted); font-style: italic; }
+
+  /* ── QUOTE GRID ── */
+  .quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 540px) { .quote-grid { grid-template-columns: 1fr; } }
+  .quote-type { border-radius: 10px; padding: 1rem; border: 2px solid transparent; }
+  .quote-direct { background: #fff8e1; border-color: #f0c060; }
+  .quote-indirect { background: #e8f0ff; border-color: #90a8e8; }
+  .quote-type .type-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.5rem; }
+  .badge-direct { background: var(--accent); color: #fff; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; }
+  .badge-indirect { background: #4a6ab0; color: #fff; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; }
+  .quote-type .rule { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .quote-type .ex { font-size: 0.86rem; background: rgba(255,255,255,0.7); padding: 0.5rem 0.7rem; border-radius: 6px; line-height: 1.5; }
+  .passive-example { background: #fff0d4; border-left: 3px solid var(--accent); padding: 0.5rem 0.8rem; border-radius: 0 6px 6px 0; font-size: 0.88rem; margin: 0.4rem 0; }
+  .section-divider { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; }
+  .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── PRACTICE ── */
+  .fill-question { background: #f9f8f5; border-radius: 10px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; border: 1.5px solid var(--border); transition: border-color 0.15s; }
+  .fill-question .q-text { font-size: 0.93rem; margin-bottom: 0.8rem; line-height: 1.8; }
+  .blank-input { border: none; border-bottom: 2px solid var(--primary); background: transparent; font-size: 0.93rem; font-family: 'Noto Sans KR', sans-serif; width: 80px; outline: none; text-align: center; color: var(--primary); font-weight: 700; padding: 0 0.2rem; }
+  .q-options { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .opt-btn { padding: 0.32rem 0.85rem; border: 1.5px solid var(--primary); background: transparent; border-radius: 20px; cursor: pointer; font-size: 0.83rem; font-family: 'Noto Sans KR', sans-serif; color: var(--primary); font-weight: 500; transition: all 0.15s; }
+  .opt-btn:hover { background: var(--primary); color: #fff; }
+  .opt-btn.correct { background: #2d8a50; border-color: #2d8a50; color: #fff; }
+  .opt-btn.wrong { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+  .feedback { margin-top: 0.6rem; font-size: 0.83rem; padding: 0.5rem 0.8rem; border-radius: 6px; display: none; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: #ddf0e8; color: #1a5c30; }
+  .feedback.no { background: #fde8e8; color: #8b1a1a; }
+
+  /* ── QUIZ ── */
+  .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 3px; transition: width 0.4s ease; }
+  .quiz-question { background: var(--surface); border-radius: var(--radius); box-shadow: var(--card-shadow); padding: 1.8rem; margin-bottom: 1rem; }
+  .q-num { font-size: 0.73rem; font-weight: 700; color: var(--primary); letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .q-stem { font-size: 0.98rem; font-weight: 500; margin-bottom: 1.2rem; line-height: 1.65; }
+  .q-stem .highlight { color: var(--primary); font-weight: 700; }
+  .choice-list { display: flex; flex-direction: column; gap: 0.55rem; }
+  .choice-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; border: 1.5px solid var(--border); background: #fafaf8; border-radius: 10px; cursor: pointer; font-size: 0.88rem; font-family: 'Noto Sans KR', sans-serif; color: var(--text); transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }
+  .choice-btn .choice-mark { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; background: #fff; transition: all 0.15s; }
+  .choice-btn:hover { border-color: var(--primary); background: #f0f7f3; }
+  .choice-btn:hover .choice-mark { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .choice-btn.selected { border-color: var(--primary); background: #e8f4ed; }
+  .choice-btn.selected .choice-mark { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .choice-btn.correct { border-color: #2d8a50; background: #ddf0e8; }
+  .choice-btn.correct .choice-mark { background: #2d8a50; color: #fff; border-color: #2d8a50; }
+  .choice-btn.wrong { border-color: var(--accent2); background: #fde8e8; }
+  .choice-btn.wrong .choice-mark { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+  .choice-btn:disabled { cursor: default; }
+  .quiz-feedback { padding: 0.85rem 1.1rem; border-radius: 10px; font-size: 0.88rem; margin-top: 0.5rem; display: none; line-height: 1.6; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #ddf0e8; border-left: 4px solid #2d8a50; color: #1a3d28; }
+  .quiz-feedback.no { background: #fde8e8; border-left: 4px solid var(--accent2); color: #5a1010; }
+  .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.2rem; flex-wrap: wrap; gap: 0.5rem; }
+
+  /* ── BUTTONS ── */
+  .btn-primary { padding: 0.7rem 1.4rem; background: var(--primary); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: 'Noto Sans KR', sans-serif; font-weight: 600; transition: background 0.15s; }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-primary:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+  .btn-ghost { padding: 0.7rem 1.1rem; background: transparent; color: var(--primary); border: 1.5px solid var(--primary); border-radius: 8px; cursor: pointer; font-size: 0.86rem; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; transition: all 0.15s; }
+  .btn-ghost:hover { background: var(--primary); color: #fff; }
+  .btn-forms { padding: 0.75rem 1.5rem; background: #4285f4; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; transition: background 0.15s; text-decoration: none; display: inline-block; }
+  .btn-forms:hover { background: #3070d4; }
+
+  /* ── RESULT ── */
+  .result-panel { display: none; }
+  .result-panel.show { display: block; animation: fadeIn 0.4s ease; }
+  .result-top { text-align: center; padding: 1.5rem 1rem 1rem; }
+  .score-row { display: flex; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .score-circle { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+  .score-inner { width: 88px; height: 88px; background: var(--surface); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
+  .score-num { font-size: 1.7rem; font-weight: 900; color: var(--primary); line-height: 1; }
+  .score-denom { font-size: 0.75rem; color: var(--text-muted); }
+  .score-stats { text-align: left; }
+  .stat-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.4rem; font-size: 0.88rem; }
+  .stat-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .result-msg { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .result-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  /* ── 결과 상세 ── */
+  .result-detail { border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border); margin-bottom: 1.2rem; }
+  .result-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+  .result-item:last-child { border-bottom: none; }
+  .result-item:nth-child(even) { background: #f9f8f5; }
+  .r-correct { color: #2d8a50; font-weight: 700; }
+  .r-wrong { color: var(--accent2); font-weight: 700; }
+  .result-item .wrong-ans { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+  /* ── FORMS SUBMIT BOX ── */
+  .forms-submit-box {
+    background: linear-gradient(135deg, #e8f0ff, #d8e8ff);
+    border: 2px solid #90a8e8;
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .forms-submit-box h4 { font-weight: 700; margin-bottom: 0.5rem; color: #2a3a7a; font-size: 1rem; }
+  .forms-submit-box .submit-info { font-size: 0.85rem; color: #3a4a8a; margin-bottom: 1rem; line-height: 1.6; }
+  .submit-data-preview {
+    background: rgba(255,255,255,0.7);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    font-size: 0.82rem;
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    color: var(--text);
+  }
+  .submit-data-preview .data-row { display: flex; gap: 0.5rem; }
+  .submit-data-preview .data-key { font-weight: 700; color: var(--primary); min-width: 80px; }
+
+  /* ── SUMMARY ── */
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 540px) { .summary-grid { grid-template-columns: 1fr; } }
+  .summary-section { background: #f9f8f5; border-radius: 10px; padding: 1rem; border-top: 4px solid var(--primary); }
+  .summary-section h4 { font-weight: 700; margin-bottom: 0.6rem; font-size: 0.92rem; color: var(--primary); }
+  .summary-section ul { list-style: none; font-size: 0.82rem; }
+  .summary-section ul li { padding: 0.22rem 0; padding-left: 1rem; position: relative; }
+  .summary-section ul li::before { content: '·'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+  @media (max-width: 540px) {
+    nav .nav-links { display: none; }
+    main { padding: 1.5rem 1rem 3rem; }
+    .card { padding: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 교사 설정 배너 ══ -->
+<div class="setup-banner" id="setup-banner">
+  ⚠️ <strong>교사 설정 필요:</strong> Apps Script URL이 아직 설정되지 않았습니다.
+  <span class="setup-link" onclick="openSetupModal()">🔧 지금 설정하기</span>
+</div>
+
+<!-- ══ 교사 설정 모달 ══ -->
+<div class="modal-overlay" id="setup-modal">
+  <div class="modal">
+    <h3>🔧 교사 설정</h3>
+    <div class="modal-sub">
+      Apps Script 배포 URL을 입력하면 학생 퀴즈 결과가 선생님 구글 시트에 자동으로 기록됩니다.<br>
+      설정 후 이 파일을 GitHub Pages 또는 Drive로 배포하세요.
+    </div>
+    <label>교사 이름 / 학급명</label>
+    <input type="text" id="cfg-teacher" placeholder="예: 윤주샘 / 2학년 3반">
+    <div class="help-text">결과 시트 상단에 표시됩니다.</div>
+
+    <label>Apps Script 웹 앱 URL <span style="color:var(--accent2)">*</span></label>
+    <input type="url" id="cfg-forms-url" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="help-text">
+      구글 시트 → 확장 프로그램 → Apps Script → 배포 → 새 배포 후 받은 URL을 붙여넣으세요.
+    </div>
+
+    <label>Forms 미리채우기 파라미터 (선택)</label>
+    <input type="text" id="cfg-forms-param" placeholder="entry.123456789=점수&entry.987654321=이름 (선택 사항)">
+    <div class="help-text">Forms URL에 ?usp=pp_url&entry.XXX=값 형식으로 자동 입력할 수 있습니다. 비워두면 학생이 직접 입력합니다.</div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="saveSetup()">💾 저장 및 적용</button>
+      <button class="btn-ghost" onclick="closeSetupModal()">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 학생 정보 입력 모달 ══ -->
+<div class="student-modal" id="student-modal">
+  <div class="student-box">
+    <h3>👋 시작하기 전에</h3>
+    <p>퀴즈 결과 제출을 위해 학번과 이름을 입력해 주세요.</p>
+    <div class="input-row">
+      <div class="student-field">
+        <label>학번</label>
+        <input type="text" id="s-num" placeholder="예: 2301" maxlength="8">
+      </div>
+      <div class="student-field">
+        <label>이름</label>
+        <input type="text" id="s-name" placeholder="홍길동" maxlength="10">
+      </div>
+    </div>
+    <button class="btn-primary" style="width:100%;margin-top:0.8rem" onclick="saveStudentInfo()">퀴즈 시작하기 →</button>
+  </div>
+</div>
+
+<nav>
+  <span class="logo">📖 중2 국어 문법</span>
+  <ul class="nav-links">
+    <li><a onclick="switchTab('learn')">개념 학습</a></li>
+    <li><a onclick="switchTab('practice')">탐구 활동</a></li>
+    <li><a onclick="switchTab('quiz')">확인 퀴즈</a></li>
+    <li><a onclick="switchTab('summary')">정리 노트</a></li>
+  </ul>
+</nav>
+
+<div class="timer-bar" id="timer-bar">
+  ⏱ 퀴즈 시간: <span class="timer-val" id="timer-display">00:00</span>
+</div>
+
+<div class="hero">
+  <div class="badge">2단원 · 적절한 표현, 정확한 읽기</div>
+  <h1>피동 표현과 인용 표현</h1>
+  <p>표현 방법에 따라 달라지는 의미와 효과를 탐구하고,<br>상황에 맞게 활용해 봅시다.</p>
+  <div class="hero-goals">
+    <div class="goal"><strong>학습 목표</strong>피동·인용 표현의 의도와 효과를 분석하고 활용할 수 있다.</div>
+    <div class="goal"><strong>핵심 역량</strong>의사소통 역량 · 비판적·창의적 사고 역량</div>
+  </div>
+</div>
+
+<!-- 학생 정보 바 -->
+<div style="max-width:860px;margin:0 auto;padding:0 1.5rem;">
+  <div class="student-info-bar" id="student-info-bar">
+    <span>👤</span>
+    <span class="info-chip" id="info-chip-num"></span>
+    <span class="info-chip" id="info-chip-name"></span>
+    <span style="font-size:0.82rem;color:var(--text-muted);margin-left:auto">정보 수정: <span style="cursor:pointer;text-decoration:underline;color:var(--primary)" onclick="openStudentModal()">다시 입력</span></span>
+  </div>
+</div>
+
+<main>
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-learn" onclick="switchTab('learn')">📚 개념 학습<span class="tab-check">✔</span></button>
+    <button class="tab-btn" id="tab-practice" onclick="switchTab('practice')">🔍 탐구 활동<span class="tab-check">✔</span></button>
+    <button class="tab-btn" id="tab-quiz" onclick="switchTab('quiz')">✏️ 확인 퀴즈<span class="tab-check">✔</span></button>
+    <button class="tab-btn" id="tab-summary" onclick="switchTab('summary')">📋 정리 노트<span class="tab-check">✔</span></button>
+  </div>
+
+  <!-- ══ PANEL: 개념 학습 ══ -->
+  <div id="panel-learn" class="panel active">
+    <div class="card">
+      <div class="card-title"><div class="icon">1</div>피동 표현이란?</div>
+      <div class="concept-box">
+        <div class="label">핵심 개념</div>
+        <p><span class="key-term">능동</span> 주어가 동작을 <strong>제힘으로</strong> 하는 것 &nbsp;|&nbsp; <span class="key-term">피동</span> 주어가 다른 대상에 의해 동작을 <strong>당하게</strong> 되는 것</p>
+      </div>
+      <table class="compare-table">
+        <thead><tr><th>구분</th><th>예문</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag-active">능동</span></td><td>경찰이 도둑을 <strong>잡았다</strong>.</td><td>경찰(주어)이 직접 잡는 행위를 함</td></tr>
+          <tr><td><span class="tag tag-passive">피동</span></td><td>도둑이 경찰에게 <strong>잡혔다</strong>.</td><td>도둑(주어)이 잡히는 행위를 당함</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.83rem;color:var(--text-muted);margin-top:0.5rem">✏️ 능동문 → 피동문: <strong>주어→부사어</strong>, <strong>목적어→주어</strong></p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">2</div>피동 표현 만드는 방법</div>
+      <div class="section-divider">방법 ① 피동 접사 붙이기</div>
+      <div class="method-grid">
+        <div class="method-card"><span class="suffix">-이-</span><div class="examples">꺾이다, 놓이다<br>깎이다, 쓰이다</div></div>
+        <div class="method-card"><span class="suffix">-히-</span><div class="examples">잡히다, 막히다<br>닫히다, 먹히다</div></div>
+        <div class="method-card"><span class="suffix">-리-</span><div class="examples">물리다, 풀리다<br>밀리다, 팔리다</div></div>
+        <div class="method-card"><span class="suffix">-기-</span><div class="examples">쫓기다, 감기다<br>뜯기다, 빼앗기다</div></div>
+      </div>
+      <div class="section-divider">방법 ② '-아/-어지다' 붙이기</div>
+      <div class="concept-box"><div class="label">예시</div><p>끊<strong>어지다</strong>, 찢<strong>어지다</strong>, 휘<strong>어지다</strong>, 쏟<strong>아지다</strong></p></div>
+      <div class="section-divider">방법 ③ '-되다 / -당하다 / -받다'</div>
+      <div class="concept-box"><div class="label">예시</div><p>해결<strong>되다</strong>, 발명<strong>되다</strong> / 거절<strong>당하다</strong> / 사랑<strong>받다</strong></p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">3</div>피동 표현의 의도와 효과</div>
+      <div class="effect-list">
+        <div class="effect-item"><div class="num">①</div><div class="content"><div class="title">행위 주체를 숨기거나 책임을 회피할 때</div><div class="example">"제가 창문을 깼어요." → "창문이 깨졌어요."</div></div></div>
+        <div class="effect-item"><div class="num">②</div><div class="content"><div class="title">행위 주체보다 대상에 초점을 맞출 때</div><div class="example">"거리를 청소하였다." → "거리가 청소되었다."</div></div></div>
+        <div class="effect-item"><div class="num">③</div><div class="content"><div class="title">객관적 의견임을 전달할 때</div><div class="example">"~볼 것으로 봅니다." → "~볼 것으로 보입니다."</div></div></div>
+        <div class="effect-item"><div class="num">④</div><div class="content"><div class="title">상대를 배려하고 부담을 줄일 때</div><div class="example">"식탁을 안 닦으셨네요." → "식탁이 잘 안 닦였네요."</div></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">4</div>인용 표현이란?</div>
+      <div class="concept-box"><div class="label">핵심 개념</div><p><span class="key-term">인용 표현</span>이란 다른 사람의 말이나 글을 자신의 말이나 글 속에 끌어 쓰는 것입니다.</p></div>
+      <div class="quote-grid">
+        <div class="quote-type quote-direct"><div class="type-title"><span class="badge-direct">직접 인용</span></div><div class="rule">원래 형태 그대로 / 큰따옴표(" ") + '(이)라고'/'하고'</div><div class="ex">그는 <strong>"내일 오겠다."라고</strong> 말했다.</div></div>
+        <div class="quote-type quote-indirect"><div class="type-title"><span class="badge-indirect">간접 인용</span></div><div class="rule">내용만 인용 / 따옴표 없이 조사 <strong>'고'</strong></div><div class="ex">그는 내일 오겠다<strong>고</strong> 말했다.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">5</div>직접 → 간접 인용 전환 시 변화</div>
+      <table class="compare-table">
+        <thead><tr><th>변화 항목</th><th>직접 인용</th><th>간접 인용</th></tr></thead>
+        <tbody>
+          <tr><td>따옴표</td><td>있음 (" ")</td><td>없어짐</td></tr>
+          <tr><td>조사</td><td>'라고'</td><td>'고'</td></tr>
+          <tr><td>지시·시간 표현</td><td>발화자 기준</td><td>인용자 기준으로 변환</td></tr>
+          <tr><td>높임 표현</td><td>원래대로</td><td>상대 높임 실현 안 됨</td></tr>
+          <tr><td>종결 어미</td><td>원래 어미</td><td>-다/-냐/-라/-자 + '고'</td></tr>
+        </tbody>
+      </table>
+      <div class="passive-example" style="margin-top:1rem">
+        <strong>[직접]</strong> 누리가 "제가 내일 가도 되겠습니까?"라고 물었다.<br>
+        <strong>[간접]</strong> 누리가 자기가 <u>오늘</u> 가도 되겠냐고 물었다.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">6</div>인용 표현의 의도와 효과</div>
+      <div class="effect-list">
+        <div class="effect-item" style="border-left-color:#4a6ab0"><div class="num" style="background:#4a6ab0">①</div><div class="content"><div class="title">생각이나 주장의 객관성·타당성을 높임</div><div class="example">통계·전문가 의견을 간접 인용하여 주장 뒷받침</div></div></div>
+        <div class="effect-item" style="border-left-color:#4a6ab0"><div class="num" style="background:#4a6ab0">②</div><div class="content"><div class="title">상황이나 생각을 더 생생하게 전달</div><div class="example">목격자·당사자 발언을 직접 인용하여 현장감 부여</div></div></div>
+      </div>
+    </div>
+
+    <div style="text-align:right;margin-top:-0.5rem">
+      <button class="btn-primary" onclick="markDone('learn'); switchTab('practice')">탐구 활동으로 → </button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: 탐구 활동 ══ -->
+  <div id="panel-practice" class="panel">
+    <div class="card">
+      <div class="card-title"><div class="icon">①</div>능동 → 피동 변환 연습</div>
+      <p style="font-size:0.88rem;margin-bottom:1.1rem">다음 능동 표현을 피동 표현으로 바꿔 빈칸에 알맞은 말을 쓰세요.</p>
+      <div id="transform-practice">
+        <div class="fill-question" data-answer="잡혔다"><div class="q-text">경찰이 도둑을 <strong>잡았다</strong>. → 도둑이 경찰에게 <input class="blank-input" placeholder="??" maxlength="6"></div><div class="feedback"></div></div>
+        <div class="fill-question" data-answer="쓰인다"><div class="q-text">선생님이 글씨를 <strong>쓴다</strong>. → 칠판에 글씨가 <input class="blank-input" placeholder="??" maxlength="6"></div><div class="feedback"></div></div>
+        <div class="fill-question" data-answer="물렸다"><div class="q-text">고양이가 쥐를 <strong>물었다</strong>. → 쥐가 고양이에게 <input class="blank-input" placeholder="??" maxlength="6"></div><div class="feedback"></div></div>
+        <div class="fill-question" data-answer="쫓겼다"><div class="q-text">경찰이 도둑을 <strong>쫓았다</strong>. → 도둑이 경찰에게 <input class="blank-input" placeholder="??" maxlength="6"></div><div class="feedback"></div></div>
+      </div>
+      <button class="btn-primary" onclick="checkTransform()">확인하기</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">②</div>피동 표현의 의도 분석</div>
+      <p style="font-size:0.88rem;margin-bottom:1.1rem">다음 상황에서 피동 표현을 사용한 의도로 가장 알맞은 것을 선택하세요.</p>
+      <div id="intent-practice"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">③</div>직접 → 간접 인용 변환</div>
+      <p style="font-size:0.88rem;margin-bottom:1.1rem">직접 인용을 간접 인용으로 바꿀 때 빈칸에 알맞은 것을 선택하세요.</p>
+      <div id="quote-practice"></div>
+    </div>
+
+    <div style="text-align:right;margin-top:-0.5rem">
+      <button class="btn-primary" onclick="markDone('practice'); switchTab('quiz')">확인 퀴즈로 → </button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: 확인 퀴즈 ══ -->
+  <div id="panel-quiz" class="panel">
+    <div id="quiz-main">
+      <div class="quiz-header">
+        <div>
+          <div style="font-size:1.05rem;font-weight:700">✏️ 확인 퀴즈</div>
+          <div style="font-size:0.83rem;color:var(--text-muted)" id="quiz-progress-text">문제 1 / 10</div>
+        </div>
+        <div id="quiz-score-badge" style="font-size:0.85rem;color:var(--text-muted)"></div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:10%"></div></div>
+      <div id="quiz-body"></div>
+      <div class="quiz-nav">
+        <button class="btn-ghost" id="btn-prev" onclick="quizPrev()" style="display:none">← 이전</button>
+        <button class="btn-primary" id="btn-next" onclick="quizNext()" disabled>다음 →</button>
+      </div>
+    </div>
+
+    <!-- 결과 패널 -->
+    <div class="result-panel" id="quiz-result">
+      <div class="card">
+        <div class="result-top">
+          <div class="score-row">
+            <canvas id="score-canvas" width="120" height="120"></canvas>
+            <div class="score-stats">
+              <div class="stat-row"><div class="stat-dot" style="background:#2d8a50"></div><span id="stat-correct"></span></div>
+              <div class="stat-row"><div class="stat-dot" style="background:var(--accent2)"></div><span id="stat-wrong"></span></div>
+              <div class="stat-row"><div class="stat-dot" style="background:#90a8e8"></div><span id="stat-time"></span></div>
+            </div>
+          </div>
+          <div class="result-msg" id="result-msg"></div>
+          <div class="result-sub" id="result-sub"></div>
+        </div>
+
+        <div class="result-detail" id="result-detail"></div>
+
+        <!-- Apps Script 자동 전송 박스 -->
+        <div class="forms-submit-box">
+          <h4>📤 선생님께 결과 자동 제출</h4>
+          <div class="submit-info">아래 버튼을 누르면 결과가 선생님 구글 시트에 자동으로 기록됩니다.</div>
+          <div class="submit-data-preview" id="submit-preview">
+            <div class="data-row"><span class="data-key">학번:</span><span id="prev-num">—</span></div>
+            <div class="data-row"><span class="data-key">이름:</span><span id="prev-name">—</span></div>
+            <div class="data-row"><span class="data-key">점수:</span><span id="prev-score">—</span></div>
+            <div class="data-row"><span class="data-key">탐구 활동:</span><span id="prev-practice">—</span></div>
+            <div class="data-row"><span class="data-key">소요시간:</span><span id="prev-time">—</span></div>
+          </div>
+          <!-- 전송 상태 표시 -->
+          <div id="submit-idle">
+            <button class="btn-forms" onclick="submitResult()">📋 결과 제출하기</button>
+          </div>
+          <div id="submit-sending" style="display:none;padding:0.8rem;text-align:center;color:#4a6ab0;font-weight:600;">
+            ⏳ 전송 중...
+          </div>
+          <div id="submit-success" style="display:none;background:#ddf0e8;border-radius:8px;padding:0.9rem 1.1rem;color:#1a5c30;font-weight:600;">
+            ✅ 제출 완료! 선생님 시트에 기록되었습니다.
+          </div>
+          <div id="submit-error" style="display:none;background:#fde8e8;border-radius:8px;padding:0.9rem 1.1rem;color:#8b1a1a;">
+            ❌ 전송 실패. 인터넷 연결을 확인하거나 선생님께 문의하세요.
+            <br><span id="submit-error-msg" style="font-size:0.8rem;"></span>
+          </div>
+          <div id="script-no-url" style="margin-top:0.7rem;font-size:0.82rem;color:#5a3a8a;display:none">
+            ⚠️ 선생님이 아직 Apps Script URL을 설정하지 않았습니다.
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap">
+          <button class="btn-ghost" onclick="resetQuiz()">🔄 다시 풀기</button>
+          <button class="btn-ghost" onclick="switchTab('summary')">📋 정리 노트 보기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: 정리 노트 ══ -->
+  <div id="panel-summary" class="panel">
+    <div class="card">
+      <div class="card-title"><div class="icon">📋</div>핵심 개념 정리</div>
+      <div class="summary-grid">
+        <div class="summary-section">
+          <h4>🔵 피동 표현</h4>
+          <ul>
+            <li><strong>개념:</strong> 주어가 동작을 당하게 되는 것</li>
+            <li><strong>방법①:</strong> -이-, -히-, -리-, -기- 접사</li>
+            <li><strong>방법②:</strong> -아/-어지다 붙이기</li>
+            <li><strong>방법③:</strong> -되다, -당하다, -받다</li>
+            <li><strong>효과:</strong> 주체 숨기기, 대상 강조, 객관성, 배려</li>
+          </ul>
+        </div>
+        <div class="summary-section">
+          <h4>🟡 인용 표현</h4>
+          <ul>
+            <li><strong>개념:</strong> 다른 이의 말·글을 끌어 쓰는 것</li>
+            <li><strong>직접 인용:</strong> " " + (이)라고/하고</li>
+            <li><strong>간접 인용:</strong> 따옴표 없이 '고'</li>
+            <li><strong>전환 시:</strong> 높임·시간·지시 표현 변환</li>
+            <li><strong>효과:</strong> 객관성·타당성, 생생한 전달</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon">🔑</div>헷갈리기 쉬운 포인트</div>
+      <table class="compare-table">
+        <thead><tr><th>항목</th><th>주의할 점</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td>피동 접사 구분</td><td>동사마다 결합하는 접사가 다름</td><td>잡→잡히다 / 물→물리다</td></tr>
+          <tr><td>능동→피동 변환</td><td>목적어→주어, 주어→부사어</td><td>엄마가 아기를 안다 → 아기가 엄마에게 안기다</td></tr>
+          <tr><td>간접 인용 전환</td><td>'라고'→'고', 시간·지시·높임 변환</td><td>'내일'→'오늘', '제가'→'자기가'</td></tr>
+          <tr><td>인용 출처</td><td>직접·간접 모두 출처 반드시 밝혀야 함</td><td>뉴스·논문 인용 시 출처 표기 필수</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#f0f7f3,#e8f4ed);border:1.5px solid #b8d9c4">
+      <div class="card-title" style="border-bottom-color:#b8d9c4"><div class="icon">💡</div>단원 핵심 질문</div>
+      <div style="font-size:0.93rem;line-height:2.1">
+        <div>❓ 피동 표현과 인용 표현을 사용하면 어떤 효과가 있을까요?</div>
+        <div style="padding-left:1.2rem;color:var(--text-muted);font-size:0.85rem;margin-bottom:0.8rem">→ 말하는 이의 의도에 따라 표현을 달리하여 더 효과적으로 의사소통할 수 있습니다.</div>
+        <div>❓ 피동 표현이 많이 쓰인 기사를 왜 비판적으로 읽어야 할까요?</div>
+        <div style="padding-left:1.2rem;color:var(--text-muted);font-size:0.85rem">→ 취재원을 밝히지 않은 피동 표현은 사실 확인이 어렵고 신뢰성이 낮을 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ══════════════════════════════════
+// 설정값 (교사가 설정하는 영역)
+// ══════════════════════════════════
+const CONFIG = {
+  // ↓ Apps Script 배포 후 받은 URL을 여기에 붙여넣으세요
+  scriptUrl: '',
+  teacherName: '',
+};
+
+// ══════════════════════════════════
+// 학생 정보
+// ══════════════════════════════════
+const student = { num: '', name: '' };
+// 탐구 활동 완료 추적
+const practiceStatus = { transform: false, intent: false, quote: false };
+function getPracticeLabel() {
+  const done = Object.values(practiceStatus).filter(Boolean).length;
+  const total = Object.keys(practiceStatus).length;
+  if (done === 0) return '미완료';
+  if (done === total) return '완료 ✅';
+  return `부분 완료 (${done}/${total})`;
+}
+
+// ══════════════════════════════════
+// 교사 설정 모달
+// ══════════════════════════════════
+function openSetupModal() {
+  document.getElementById('cfg-teacher').value = CONFIG.teacherName;
+  document.getElementById('cfg-forms-url').value = CONFIG.formsUrl;
+  document.getElementById('setup-modal').classList.add('show');
+}
+function closeSetupModal() { document.getElementById('setup-modal').classList.remove('show'); }
+function saveSetup() {
+  CONFIG.teacherName = document.getElementById('cfg-teacher').value.trim();
+  CONFIG.scriptUrl   = document.getElementById('cfg-forms-url').value.trim();
+  document.getElementById('setup-banner').style.display = CONFIG.scriptUrl ? 'none' : '';
+  closeSetupModal();
+  alert('설정이 저장되었습니다.\n※ 실제 배포 시 HTML 파일 내 CONFIG.scriptUrl 값을 직접 수정해 넣으시면 매번 설정하지 않아도 됩니다.');
+}
+window.addEventListener('load', () => {
+  if (CONFIG.scriptUrl) document.getElementById('setup-banner').style.display = 'none';
+});
+
+// ══════════════════════════════════
+// 학생 정보 모달
+// ══════════════════════════════════
+function openStudentModal() { document.getElementById('student-modal').classList.add('show'); }
+function saveStudentInfo() {
+  const num = document.getElementById('s-num').value.trim();
+  const name = document.getElementById('s-name').value.trim();
+  if (!num || !name) { alert('학번과 이름을 모두 입력해 주세요.'); return; }
+  student.num = num; student.name = name;
+  document.getElementById('student-modal').classList.remove('show');
+  showStudentBar();
+  buildQuiz();
+}
+function showStudentBar() {
+  document.getElementById('student-info-bar').classList.add('show');
+  document.getElementById('info-chip-num').textContent = student.num;
+  document.getElementById('info-chip-name').textContent = student.name;
+}
+
+// ══════════════════════════════════
+// 탭 전환
+// ══════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'practice') buildPractice();
+  if (tab === 'quiz') {
+    if (!student.name) { openStudentModal(); }
+    else if (!quizBuilt) { buildQuiz(); }
+  }
+}
+function markDone(tab) { document.getElementById('tab-' + tab).classList.add('done'); }
+
+// ══════════════════════════════════
+// 탐구: 능동→피동 변환
+// ══════════════════════════════════
+function checkTransform() {
+  document.querySelectorAll('#transform-practice .fill-question').forEach(q => {
+    const ans = q.dataset.answer;
+    const input = q.querySelector('.blank-input');
+    const fb = q.querySelector('.feedback');
+    fb.className = 'feedback show ' + (input.value.trim() === ans ? 'ok' : 'no');
+    fb.textContent = input.value.trim() === ans ? '✅ 정답입니다!' : `❌ 정답은 "${ans}"입니다.`;
+    input.style.color = input.value.trim() === ans ? '#2d8a50' : '#c94040';
+  });
+  practiceStatus.transform = true;
+}
+
+// ══════════════════════════════════
+// 탐구: 피동 의도 분석
+// ══════════════════════════════════
+const intentData = [
+  { sentence: '물이 쏟아졌네.', context: '실수로 물을 쏟은 아이가 부모에게', options: ['행위 주체를 숨기고 책임 회피', '대상에 더 초점을 맞추기 위해', '객관적 의견을 전달하기 위해'], answer: 0, explain: '피동 표현으로 자신이 물을 쏟았다는 사실을 직접 드러내지 않아 책임을 회피하는 효과가 있습니다.' },
+  { sentence: '태풍으로 인한 피해는 계속 늘어날 것으로 보입니다.', context: '뉴스 기상 캐스터의 날씨 예보', options: ['행위 주체를 숨기기 위해', '상대를 배려하기 위해', '객관적 의견임을 전달하기 위해'], answer: 2, explain: '"-로 보입니다"는 특정 개인이 아닌 다수가 동의할 수 있는 객관적 예측임을 나타냅니다.' },
+];
+const intentAnswered = [false, false];
+let practiceBuilt = false;
+
+function buildPractice() {
+  if (practiceBuilt) return;
+  practiceBuilt = true;
+  const c = document.getElementById('intent-practice');
+  intentData.forEach((item, idx) => {
+    c.innerHTML += `<div class="fill-question"><div class="q-text"><strong>문장:</strong> "${item.sentence}"<br><strong>상황:</strong> ${item.context}</div><div class="q-options">${item.options.map((o,i)=>`<button class="opt-btn" onclick="checkIntent(${idx},${i})">${o}</button>`).join('')}</div><div class="feedback" id="intent-fb-${idx}"></div></div>`;
+  });
+  buildQuotePractice();
+}
+function checkIntent(qIdx, chosen) {
+  if (intentAnswered[qIdx]) return;
+  intentAnswered[qIdx] = true;
+  const item = intentData[qIdx];
+  document.querySelectorAll(`#intent-practice .fill-question:nth-child(${qIdx+1}) .opt-btn`).forEach((b,i) => {
+    b.disabled = true;
+    if (i === item.answer) b.classList.add('correct');
+    else if (i === chosen) b.classList.add('wrong');
+  });
+  const fb = document.getElementById(`intent-fb-${qIdx}`);
+  fb.className = 'feedback show ' + (chosen === item.answer ? 'ok' : 'no');
+  fb.textContent = (chosen === item.answer ? '✅ 맞습니다! ' : '❌ 틀렸습니다. ') + item.explain;
+  if (intentAnswered.every(Boolean)) practiceStatus.intent = true;
+}
+
+// ══════════════════════════════════
+// 탐구: 직접→간접 인용
+// ══════════════════════════════════
+const quotePData = [
+  { direct: '수지가 나에게 "제가 내일 가도 되겠습니까?"라고 물었다.', indirect: '수지가 나에게 자기가 ___ 가도 되겠냐고 물었다.', blank: '오늘', options: ['내일','오늘','어제'], explain: '발화자 기준 "내일"이 인용자 기준 "오늘"로 바뀝니다.' },
+  { direct: '그는 "나는 이 책이 아주 좋다."라고 말했다.', indirect: '그는 ___ 책이 아주 좋다고 말했다.', blank: '그', options: ['나의','이','그'], explain: '"나는"은 간접 인용에서 인용자 관점으로 바뀌어 "그의/그"가 됩니다.' },
+];
+const quoteAnswered = [false, false];
+
+function buildQuotePractice() {
+  const c = document.getElementById('quote-practice');
+  quotePData.forEach((item, idx) => {
+    c.innerHTML += `<div class="fill-question"><div class="q-text"><strong>[직접]</strong> ${item.direct}<br><strong>[간접]</strong> ${item.indirect}</div><div class="q-options">${item.options.map(o=>`<button class="opt-btn" onclick="checkQuoteP(${idx},'${o}')">${o}</button>`).join('')}</div><div class="feedback" id="quote-fb-${idx}"></div></div>`;
+  });
+}
+function checkQuoteP(qIdx, chosen) {
+  if (quoteAnswered[qIdx]) return;
+  quoteAnswered[qIdx] = true;
+  const item = quotePData[qIdx];
+  document.querySelectorAll(`#quote-practice .fill-question:nth-child(${qIdx+1}) .opt-btn`).forEach(b => {
+    b.disabled = true;
+    if (b.textContent === item.blank) b.classList.add('correct');
+    else if (b.textContent === chosen && chosen !== item.blank) b.classList.add('wrong');
+  });
+  const fb = document.getElementById(`quote-fb-${qIdx}`);
+  fb.className = 'feedback show ' + (chosen === item.blank ? 'ok' : 'no');
+  fb.textContent = (chosen === item.blank ? '✅ 정답입니다! ' : `❌ 정답은 "${item.blank}"입니다. `) + item.explain;
+  if (quoteAnswered.every(Boolean)) practiceStatus.quote = true;
+}
+
+// ══════════════════════════════════
+// 퀴즈 데이터
+// ══════════════════════════════════
+const quizData = [
+  { stem: '다음 중 <span class="highlight">피동 표현</span>이 올바르게 쓰인 문장은?', choices: ['강아지가 고양이를 쫓았다.','고양이가 강아지에게 쫓겼다.','강아지가 고양이에게 쫓겼다.','고양이를 강아지가 쫓았다.'], answer: 1, explain: '"쫓겼다"는 접사 "-기-"가 결합한 피동 표현으로, 고양이(주어)가 강아지에게 쫓기는 동작을 당합니다.' },
+  { stem: '피동 접사 <span class="highlight">"-히-"</span>가 결합된 피동 표현이 아닌 것은?', choices: ['잡히다','먹히다','물리다','막히다'], answer: 2, explain: '"물리다"는 "-리-" 접사가 결합된 피동 표현입니다.' },
+  { stem: '"엄마가 아기를 안았다."를 피동 표현으로 바르게 바꾼 것은?', choices: ['엄마에게 아기가 안겼다.','아기가 엄마에게 안겼다.','엄마가 아기에게 안겼다.','아기를 엄마가 안겼다.'], answer: 1, explain: '능동문의 목적어 "아기를"→주어 "아기가", 주어 "엄마가"→부사어 "엄마에게"로 바뀝니다.' },
+  { stem: '다음 중 피동 표현의 의도가 나머지와 <span class="highlight">다른</span> 것은?', choices: ['"창문이 깨졌어요." (실수한 아이)','태풍 피해가 늘어날 것으로 보입니다." (기상 캐스터)','국보급 유물, 발견되다!" (신문 헤드라인)','식탁이 잘 안 닦였네요." (손님→식당 종업원)'], answer: 1, explain: '②는 객관적 의견 전달 목적입니다. ①은 책임 회피, ③은 대상 강조, ④는 상대 배려 의도입니다.' },
+  { stem: '<span class="highlight">인용 표현</span>에 대한 설명으로 알맞지 않은 것은?', choices: ['다른 사람의 말을 그대로 옮기는 것을 직접 인용이라 한다.','간접 인용은 따옴표 없이 조사 \'고\'를 사용한다.','인용 표현은 주장의 타당성을 높이는 효과가 있다.','간접 인용은 원래 말의 높임 표현을 그대로 유지한다.'], answer: 3, explain: '간접 인용으로 바꿀 때는 상대 높임법이 실현되지 않으며, 종결 어미도 바뀝니다.' },
+  { stem: '"그는 \'내일 오겠다.\'라고 말했다."를 간접 인용으로 바르게 바꾼 것은?', choices: ['그는 "내일 오겠다."라고 말했다.','그는 내일 오겠다고 말했다.','그는 오늘 가겠다고 말했다.','그는 내일 가겠다고 말했다.'], answer: 1, explain: '따옴표를 없애고 "라고"를 "고"로 바꿉니다.' },
+  { stem: '다음 중 <span class="highlight">"-아/-어지다"</span>를 이용한 피동 표현이 아닌 것은?', choices: ['종이가 찢어졌다.','날씨가 좋아졌다.','줄이 끊어졌다.','고양이에게 잡혔다.'], answer: 3, explain: '"잡혔다"는 피동 접사 "-히-"가 결합한 파생적 피동 표현입니다.' },
+  { stem: '직접 인용을 간접 인용으로 바꿀 때 <span class="highlight">변하지 않는</span> 것은?', choices: ['따옴표','조사 \'라고\'','인용하는 내용의 사실','높임 표현'], answer: 2, explain: '따옴표, 조사, 높임·시간·지시 표현은 바뀌지만, 인용 내용의 사실 자체는 바뀌지 않습니다.' },
+  { stem: '신문 기사에서 취재원을 밝히지 않고 피동 표현을 쓰는 문제점은?', choices: ['문장이 너무 길어진다.','주어가 명확해진다.','사실 확인이 어렵고 신뢰성이 낮아진다.','능동 표현보다 이해하기 어렵다.'], answer: 2, explain: '취재원을 밝히지 않으면 누가 그 정보를 제공했는지 알 수 없어 사실 여부를 검증하기 어렵습니다.' },
+  { stem: '"내일 비가 내릴 것으로 <u>보입니다</u>."에 쓰인 피동 표현의 의도로 가장 알맞은 것은?', choices: ['행위 주체를 숨기려 한다.','대상에 초점을 맞추려 한다.','일반적으로 동의할 수 있는 객관적 예측임을 전달한다.','상대방의 기분을 배려한다.'], answer: 2, explain: '"보입니다"는 특정 개인의 의견이 아닌 다수가 동의할 수 있는 객관적 예측이라는 의미입니다.' },
+];
+
+// ══════════════════════════════════
+// 퀴즈 엔진 + 타이머
+// ══════════════════════════════════
+let currentQ = 0;
+let userAnswers = Array(quizData.length).fill(null);
+let answered = Array(quizData.length).fill(false);
+let quizBuilt = false;
+let timerInterval = null;
+let elapsedSec = 0;
+
+function startTimer() {
+  document.getElementById('timer-bar').classList.add('show');
+  timerInterval = setInterval(() => {
+    elapsedSec++;
+    const m = String(Math.floor(elapsedSec/60)).padStart(2,'0');
+    const s = String(elapsedSec%60).padStart(2,'0');
+    document.getElementById('timer-display').textContent = `${m}:${s}`;
+  }, 1000);
+}
+function stopTimer() {
+  clearInterval(timerInterval);
+  document.getElementById('timer-bar').classList.remove('show');
+}
+function formatTime(sec) {
+  const m = Math.floor(sec/60), s = sec%60;
+  return m > 0 ? `${m}분 ${s}초` : `${s}초`;
+}
+
+function buildQuiz() {
+  if (quizBuilt) return;
+  quizBuilt = true;
+  elapsedSec = 0;
+  startTimer();
+  renderQuestion(0);
+}
+
+function renderQuestion(idx) {
+  currentQ = idx;
+  const q = quizData[idx], total = quizData.length;
+  document.getElementById('quiz-progress-text').textContent = `문제 ${idx+1} / ${total}`;
+  document.getElementById('progress-fill').style.width = `${((idx+1)/total)*100}%`;
+  const correct = userAnswers.filter((a,i) => a === quizData[i].answer).length;
+  const done = answered.filter(Boolean).length;
+  document.getElementById('quiz-score-badge').textContent = done > 0 ? `현재 ${correct}/${done} 정답` : '';
+
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="quiz-question">
+      <div class="q-num">문제 ${idx+1}</div>
+      <div class="q-stem">${q.stem}</div>
+      <div class="choice-list">
+        ${q.choices.map((c,i) => `
+          <button class="choice-btn ${answered[idx] ? (i===q.answer?'correct':(userAnswers[idx]===i?'wrong':'')) : (userAnswers[idx]===i?'selected':'')}"
+            onclick="selectAnswer(${i})" ${answered[idx]?'disabled':''}>
+            <div class="choice-mark">${['①','②','③','④'][i]}</div><span>${c}</span>
+          </button>`).join('')}
+      </div>
+      <div class="quiz-feedback ${answered[idx]?'show '+(userAnswers[idx]===q.answer?'ok':'no'):''}" id="quiz-feedback">
+        ${answered[idx]?(userAnswers[idx]===q.answer?'✅ 정답입니다! ':'❌ 정답은 '+['①','②','③','④'][q.answer]+'입니다. ')+q.explain:''}
+      </div>
+    </div>`;
+
+  document.getElementById('btn-next').disabled = !answered[idx];
+  document.getElementById('btn-next').textContent = idx === total-1 ? '결과 보기' : '다음 →';
+  document.getElementById('btn-prev').style.display = idx > 0 ? 'inline-block' : 'none';
+}
+
+function selectAnswer(choice) {
+  if (answered[currentQ]) return;
+  userAnswers[currentQ] = choice;
+  answered[currentQ] = true;
+  renderQuestion(currentQ);
+}
+function quizNext() { currentQ < quizData.length-1 ? renderQuestion(currentQ+1) : showResult(); }
+function quizPrev() { if (currentQ > 0) renderQuestion(currentQ-1); }
+
+function showResult() {
+  stopTimer();
+  markDone('quiz');
+  document.getElementById('quiz-main').style.display = 'none';
+  document.getElementById('quiz-result').classList.add('show');
+
+  const correct = userAnswers.filter((a,i) => a === quizData[i].answer).length;
+  const total = quizData.length;
+  const pct = Math.round((correct/total)*100);
+  const timeStr = formatTime(elapsedSec);
+  const wrongNums = quizData.map((_,i) => userAnswers[i] !== quizData[i].answer ? `${i+1}번` : null).filter(Boolean);
+
+  // Canvas 도넛 차트
+  const canvas = document.getElementById('score-canvas');
+  const ctx = canvas.getContext('2d');
+  const cx = 60, cy = 60, r = 50, stroke = 12;
+  ctx.clearRect(0,0,120,120);
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle = '#e0ddd6'; ctx.lineWidth = stroke; ctx.stroke();
+  const angle = (pct/100)*Math.PI*2 - Math.PI/2;
+  ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,angle); ctx.strokeStyle = pct>=70?'#2d5a3d':'#c94040'; ctx.lineWidth = stroke; ctx.lineCap='round'; ctx.stroke();
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 22px Noto Sans KR, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(`${correct}/${total}`, cx, cy-6);
+  ctx.font = '12px Noto Sans KR, sans-serif'; ctx.fillStyle = '#6b6b6b';
+  ctx.fillText(`${pct}%`, cx, cy+14);
+
+  document.getElementById('stat-correct').textContent = `정답: ${correct}문항`;
+  document.getElementById('stat-wrong').textContent = `오답: ${total-correct}문항`;
+  document.getElementById('stat-time').textContent = `소요 시간: ${timeStr}`;
+
+  let msg, sub;
+  if (pct>=90){msg='🎉 훌륭합니다!';sub='피동 표현과 인용 표현을 완벽히 이해했어요!';}
+  else if(pct>=70){msg='👍 잘했습니다!';sub='조금만 더 복습하면 완벽해질 거예요.';}
+  else if(pct>=50){msg='📚 더 공부해 봐요!';sub='개념 학습 탭을 다시 살펴보세요.';}
+  else{msg='💪 다시 도전!';sub='개념 학습과 탐구 활동부터 차근차근 해봐요.';}
+  document.getElementById('result-msg').textContent = msg;
+  document.getElementById('result-sub').textContent = sub;
+
+  // 결과 상세
+  document.getElementById('result-detail').innerHTML = quizData.map((q,i) => {
+    const ok = userAnswers[i] === q.answer;
+    return `<div class="result-item">
+      <span style="color:var(--text-muted);font-size:0.8rem">Q${i+1}</span>
+      <span>${q.stem.replace(/<[^>]*>/g,'').substring(0,28)}…</span>
+      <span class="${ok?'r-correct':'r-wrong'}">${ok?'✅':'❌'}</span>
+    </div>`;
+  }).join('');
+
+  // 미리보기 데이터
+  const practiceLabel = getPracticeLabel();
+  document.getElementById('prev-num').textContent = student.num || '—';
+  document.getElementById('prev-name').textContent = student.name || '—';
+  document.getElementById('prev-score').textContent = `${correct}/${total} (${pct}%)`;
+  document.getElementById('prev-practice').textContent = practiceLabel;
+  document.getElementById('prev-time').textContent = timeStr;
+}
+
+// ══════════════════════════════════
+// Apps Script 자동 전송
+// ══════════════════════════════════
+function submitResult() {
+  const url = CONFIG.scriptUrl;
+  if (!url) {
+    document.getElementById('script-no-url').style.display = 'block';
+    return;
+  }
+
+  // 전송할 데이터 구성
+  const correct = userAnswers.filter((a,i) => a === quizData[i].answer).length;
+  const total   = quizData.length;
+  const payload = {
+    studentNum:     student.num,
+    studentName:    student.name,
+    scoreText:      `${correct}/${total} (${Math.round(correct/total*100)}%)`,
+    correctCount:   correct,
+    totalCount:     total,
+    practiceStatus: getPracticeLabel(),
+    elapsedTime:    formatTime(elapsedSec),
+  };
+
+  // 전송 상태 UI 전환
+  document.getElementById('submit-idle').style.display    = 'none';
+  document.getElementById('submit-sending').style.display = 'block';
+  document.getElementById('submit-success').style.display = 'none';
+  document.getElementById('submit-error').style.display   = 'none';
+
+  // Apps Script로 POST 전송
+  // no-cors 모드: 응답 본문을 읽을 수 없지만 전송은 성공함
+  fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  .then(() => {
+    document.getElementById('submit-sending').style.display = 'none';
+    document.getElementById('submit-success').style.display = 'block';
+  })
+  .catch(err => {
+    document.getElementById('submit-sending').style.display = 'none';
+    document.getElementById('submit-error').style.display   = 'block';
+    document.getElementById('submit-error-msg').textContent = err.message;
+  });
+}
+
+function resetQuiz() {
+  userAnswers = Array(quizData.length).fill(null);
+  answered = Array(quizData.length).fill(false);
+  currentQ = 0; quizBuilt = false; elapsedSec = 0;
+  document.getElementById('quiz-main').style.display = 'block';
+  document.getElementById('quiz-result').classList.remove('show');
+  buildQuiz();
+}
+</script>
+</body>
+</html>
